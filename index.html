@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Todoリスト</title>
+</head>
+<body>
+
+<h1>私のTodoリスト</h1>
+
+<input id="todoInput" placeholder="タスクを入力">
+<button onclick="addTodo()">追加</button>
+
+<ul id="todoList"></ul>
+
+<script>
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+function renderTodos() {
+  const list = document.getElementById("todoList");
+  list.innerHTML = "";
+
+  todos.forEach((text, index) => {
+    const li = document.createElement("li");
+    li.textContent = text;
+
+    const btn = document.createElement("button");
+    btn.textContent = "削除";
+
+    btn.onclick = function () {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    };
+
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+function addTodo() {
+  const input = document.getElementById("todoInput");
+  const text = input.value;
+
+  if (text === "") return;
+
+  todos.push(text);
+  saveTodos();
+  renderTodos();
+
+  input.value = "";
+}
+
+renderTodos();
+</script>
+
+</body>
+</html>
